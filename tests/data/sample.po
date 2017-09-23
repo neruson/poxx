@@ -15,7 +15,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #: foo.py:47
 msgid "Zero"
@@ -42,3 +42,15 @@ msgstr ""
 #, python-brace-format
 msgid "{five}"
 msgstr ""
+
+#: foo.py:47
+msgid "Six"
+msgid_plural "Sixes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: foo.py:47
+msgid "Seven"
+msgid_plural "Sevens"
+msgstr[0] ""
+msgstr[1] ""

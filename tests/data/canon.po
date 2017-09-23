@@ -25,3 +25,9 @@ msgstr "Uno"
 #: foo.py:47
 msgid "Three"
 msgstr "Tree"
+
+#: foo.py:47
+msgid "Seven"
+msgid_plural "Sevens"
+msgstr[0] "Nana"
+msgstr[1] "Nanana"

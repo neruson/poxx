@@ -92,29 +92,54 @@ class HtmlAwareMessageMunger(HTMLParser.HTMLParser):
         self.s += "&" + name + ";"
 
 
-def _get_canonical_value(canonical_po, msgid):
+def _get_canonical_entry(canonical_po, msgid):
     if canonical_po is None:
         return None
-    canonical_entry = canonical_po.find(msgid)
-    return getattr(canonical_entry, 'msgstr', None)
+    return canonical_po.find(msgid)
+
+
+def _get_canonical_plural_forms(canonical_po):
+    if not canonical_po:
+        return None
+    return canonical_po.metadata.get('Plural-Forms')
 
 
 def munge_one_file(fname, blank, canon_name=None):
     po = polib.pofile(fname)
     canonical_po = polib.pofile(canon_name) if canon_name else None
 
+    # If plural forms is unset, use the canonical value if it exists. If not,
+    # fall back to English rules.
+    plural_template = "nplurals=INTEGER; plural=EXPRESSION;"
+    if po.metadata.get('Plural-Forms') == plural_template:
+        canonical_plurals = _get_canonical_plural_forms(canonical_po)
+        english_plurals = "nplurals=2; plural=n == 1 ? 0 : 1;"
+        po.metadata['Plural-Forms'] = canonical_plurals or english_plurals
+
     count = 0
     for entry in po:
-        canonical_value = _get_canonical_value(canonical_po, entry.msgid)
+        canonical_entry = _get_canonical_entry(canonical_po, entry.msgid)
 
-        if canonical_value:
-            entry.msgstr = canonical_value
+        if canonical_entry:
+            entry.msgstr = getattr(canonical_entry, 'msgstr', None)
+            entry.msgstr_plural = getattr(canonical_entry, 'msgstr_plural', None)
         elif blank:
             entry.msgstr = ''
         else:
             hamm = HtmlAwareMessageMunger()
             hamm.feed(entry.msgid)
-            entry.msgstr = hamm.result()
+            if not entry.msgid_plural:
+                entry.msgstr = hamm.result()
+            else:
+                singular = hamm.result()
+                hamm = HtmlAwareMessageMunger()
+                hamm.feed(entry.msgid_plural)
+                plural = hamm.result()
+                for key in entry.msgstr_plural:
+                    if key == 0:
+                        entry.msgstr_plural[key] = singular
+                    else:
+                        entry.msgstr_plural[key] = plural
 
             if 'fuzzy' in entry.flags:
                 entry.flags.remove('fuzzy')  # clear the fuzzy flag

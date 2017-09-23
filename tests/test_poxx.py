@@ -42,6 +42,13 @@ class TestMungePoFile(PoxxTestCase):
         self.assertEqual(munged_pofile[3].msgstr, u'Ŧħřḗḗ')
         self.assertEqual(munged_pofile[4].msgstr, u'%(four)s')
         self.assertEqual(munged_pofile[5].msgstr, u'{five}')
+        self.assertEqual(munged_pofile[6].msgstr_plural[0], u'Şīẋ')
+        self.assertEqual(munged_pofile[6].msgstr_plural[1], u'Şīẋḗş')
+        self.assertEqual(munged_pofile[7].msgstr_plural[0], u'Şḗṽḗƞ')
+        self.assertEqual(munged_pofile[7].msgstr_plural[1], u'Şḗṽḗƞş')
+
+        self.assertEqual(munged_pofile.metadata['Plural-Forms'],
+                         "nplurals=2; plural=n == 1 ? 0 : 1;")
 
     def test_blank_munge(self):
         munge_one_file(self.sample_po_path, blank=True)
@@ -53,6 +60,10 @@ class TestMungePoFile(PoxxTestCase):
         self.assertEqual(munged_pofile[3].msgstr, u'')
         self.assertEqual(munged_pofile[4].msgstr, u'')
         self.assertEqual(munged_pofile[5].msgstr, u'')
+        self.assertEqual(munged_pofile[6].msgstr_plural[0], u'')
+        self.assertEqual(munged_pofile[6].msgstr_plural[1], u'')
+        self.assertEqual(munged_pofile[7].msgstr_plural[0], u'')
+        self.assertEqual(munged_pofile[7].msgstr_plural[1], u'')
 
         untranslated_count = len(munged_pofile.untranslated_entries())
         total_count = len(munged_pofile)
@@ -68,6 +79,13 @@ class TestMungePoFile(PoxxTestCase):
         self.assertEqual(munged_pofile[3].msgstr, u'Tree')
         self.assertEqual(munged_pofile[4].msgstr, u'%(four)s')
         self.assertEqual(munged_pofile[5].msgstr, u'{five}')
+        self.assertEqual(munged_pofile[6].msgstr_plural[0], u'Şīẋ')
+        self.assertEqual(munged_pofile[6].msgstr_plural[1], u'Şīẋḗş')
+        self.assertEqual(munged_pofile[7].msgstr_plural[0], u'Nana')
+        self.assertEqual(munged_pofile[7].msgstr_plural[1], u'Nanana')
+
+        self.assertEqual(munged_pofile.metadata['Plural-Forms'],
+                         "nplurals=2; plural=(n > 1)")
 
     def test_canonical_and_blank_munge(self):
         munge_one_file(self.sample_po_path, blank=True, canon_name=self.canon_po_path)
@@ -79,9 +97,13 @@ class TestMungePoFile(PoxxTestCase):
         self.assertEqual(munged_pofile[3].msgstr, u'Tree')
         self.assertEqual(munged_pofile[4].msgstr, u'')
         self.assertEqual(munged_pofile[5].msgstr, u'')
+        self.assertEqual(munged_pofile[6].msgstr_plural[0], u'')
+        self.assertEqual(munged_pofile[6].msgstr_plural[1], u'')
+        self.assertEqual(munged_pofile[7].msgstr_plural[0], u'Nana')
+        self.assertEqual(munged_pofile[7].msgstr_plural[1], u'Nanana')
 
         untranslated_count = len(munged_pofile.untranslated_entries())
-        self.assertEqual(4, untranslated_count)
+        self.assertEqual(5, untranslated_count)
 
 
 class DiffTestCase(PoxxTestCase):
