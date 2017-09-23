@@ -206,4 +206,4 @@ if __name__ == "__main__":
         else:
             report_msg = munge_one_file(fname, options.blank, canon_name=options.canonical_po_file)
 
-    print report_msg
+        print report_msg
