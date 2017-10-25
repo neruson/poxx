@@ -54,3 +54,7 @@ msgid "Seven"
 msgid_plural "Sevens"
 msgstr[0] ""
 msgstr[1] ""
+
+#: foo.py:47
+msgid "<a href=\"eight\" title=\"eight\" disabled>Eight</a>"
+msgstr ""
