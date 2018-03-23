@@ -19,20 +19,26 @@ This code is in the public domain.
 import optparse
 import os.path
 import re
+import sys
 import polib    # from http://bitbucket.org/izi/polib
-import HTMLParser
+
+if sys.version_info >= (3, 0):
+    from html.parser import HTMLParser
+else:
+    from HTMLParser import HTMLParser
+
 
 VERSION_STR = '1.1.1'
 
 
-class HtmlAwareMessageMunger(HTMLParser.HTMLParser):
+class HtmlAwareMessageMunger(HTMLParser):
 
     # Lifted from http://translate.sourceforge.net
     ORIGINAL = u"ABCDEFGHIJKLMNOPQRSTUVWXYZ" + u"abcdefghijklmnopqrstuvwxyz"
     REWRITE_UNICODE_MAP = u"ȦƁƇḒḖƑƓĦĪĴĶĿḾȠǾƤɊŘŞŦŬṼẆẊẎẐ" + u"ȧƀƈḓḗƒɠħīĵķŀḿƞǿƥɋřşŧŭṽẇẋẏẑ"
 
     def __init__(self):
-        HTMLParser.HTMLParser.__init__(self)
+        HTMLParser.__init__(self)
         self.s = ""
 
     def result(self):
